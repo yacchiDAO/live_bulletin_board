@@ -18,6 +18,8 @@ defmodule BulletinBoardWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+    live "/threads", ThreadLive.Index, :index
+    live "/threads/:thread_id/posts", PostLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

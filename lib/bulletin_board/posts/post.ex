@@ -14,5 +14,6 @@ defmodule BulletinBoard.Posts.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:thread_id, :name, :body, :number])
+    |> validate_required([:thread_id, :name, :body, :number])
   end
 end

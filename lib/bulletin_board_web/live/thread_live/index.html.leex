@@ -1,0 +1,5 @@
+<ul>
+  <%= for thread <- @threads do %>
+    <li><%= live_redirect thread.title, to: Routes.post_index_path(@socket, :index, thread.id) %></li>
+  <% end %>
+</ul>
