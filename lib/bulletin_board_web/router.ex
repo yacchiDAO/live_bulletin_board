@@ -18,7 +18,7 @@ defmodule BulletinBoardWeb.Router do
   end
 
   scope "/", BulletinBoardWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/", PageLive, :index
     live "/threads", ThreadLive.Index, :index

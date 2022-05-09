@@ -3,8 +3,12 @@ defmodule BulletinBoardWeb.ThreadLive.Index do
 
   alias BulletinBoard.Threads
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :threads, list_threads())}
+  def mount(_params, session, socket) do
+    current_user = BulletinBoard.Users.get_user_by_session_token(session["user_token"])
+    {:ok,
+     socket
+     |> assign(:threads, list_threads())
+     |> assign(:current_user, current_user)}
   end
 
   def handle_params(params, _url, socket) do

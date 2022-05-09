@@ -7,9 +7,12 @@ defmodule BulletinBoardWeb.PostLive.Index do
 
   @topic "posts"
 
-  def mount(%{"thread_id" => thread_id}, _session, socket) do
+  def mount(%{"thread_id" => thread_id}, session, socket) do
+    current_user = BulletinBoard.Users.get_user_by_session_token(session["user_token"])
     if connected?(socket), do: Posts.subscribe(thread_id)
-    {:ok, socket}
+    {:ok,
+     socket
+     |> assign(current_user: current_user)}
   end
 
   def handle_params(params, _url, socket) do
