@@ -1,7 +1,7 @@
 <h1><%= @thread.title %></h1>
 <ul>
   <%= for post <- @posts do %>
-    <div>
+    <div class="post">
       <li>
         <%= "#{post.number} #{post.name} #{post.inserted_at}" %>
       </li>
