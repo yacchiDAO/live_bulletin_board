@@ -16,14 +16,12 @@
 </ul>
 
 <%= f = form_for Post.changeset(%Post{}, %{thread_id: @thread.id}), "#", phx_submit: "submit", phx_change: "typing" %>
-  <%= if @typing do %>
-    <p>typing...</p>
-  <% end %>
+  <p style=<%= if Kernel.map_size(@typing_users) == 0, do: "opacity:0;", else: "opacity:0.7;" %>>
+    typing <%= Kernel.map_size(@typing_users) %> users
+  </p>
 
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
+  <%= text_input f, :name, value: @user_name %>
 
   <%= textarea f, :body %>
-  <%= error_tag f, :body %>
   <%= submit "送信", phx_disable_with: "Submitting..." %>
 </form>

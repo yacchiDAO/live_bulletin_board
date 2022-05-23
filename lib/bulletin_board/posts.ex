@@ -24,6 +24,7 @@ defmodule BulletinBoard.Posts do
   end
 
   def create_post(%{"name" => ""} = attrs), do: create_post(Map.put(attrs, "name", "名無しさん"))
+  def create_post(%{"body" => ""} = attrs), do: {:error, Post.changeset(%Post{}, attrs)}
 
   def create_post(%{"thread_id" => thread_id} = attrs) do
     %Post{}
