@@ -19,6 +19,9 @@
   <p style=<%= if Kernel.map_size(@typing_users) == 0, do: "opacity:0;", else: "opacity:0.7;" %>>
     typing <%= Kernel.map_size(@typing_users) %> users
   </p>
+  <p>
+    <%= @active_user_count %> active users
+  </p>
 
   <%= text_input f, :name, value: @user_name %>
 

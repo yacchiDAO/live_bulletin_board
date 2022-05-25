@@ -13,6 +13,8 @@ defmodule BulletinBoard.Application do
       BulletinBoardWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: BulletinBoard.PubSub},
+      # It must be after the PubSub child and before the endpoint:
+      BulletinBoardWeb.Presence,
       # Start the Endpoint (http/https)
       BulletinBoardWeb.Endpoint
       # Start a worker by calling: BulletinBoard.Worker.start_link(arg)

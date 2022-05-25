@@ -1,14 +1,19 @@
 defmodule BulletinBoardWeb.PostLive.Index do
   use BulletinBoardWeb, :live_view
 
+  alias BulletinBoardWeb.Presence
   alias BulletinBoard.Threads
   alias BulletinBoard.Posts
   alias BulletinBoard.Posts.Post
 
   @topic "posts"
+  @presence_topic "posts_presence"
 
   def mount(%{"thread_id" => thread_id}, session, socket) do
     current_user = BulletinBoard.Users.get_user_by_session_token(session["user_token"])
+    # pid, topic, key, payload
+    Presence.track(self(), @presence_topic <> "#{thread_id}", current_user.id, %{id: current_user.id})
+
     if connected?(socket) do
       Posts.subscribe(thread_id)
       subscribe(thread_id)
@@ -29,6 +34,7 @@ defmodule BulletinBoardWeb.PostLive.Index do
     |> assign(:posts, Posts.list_posts(thread_id))
     |> assign(:typing_users, %{})
     |> assign(:user_name, "")
+    |> assign(:active_user_count, Presence.list(@presence_topic <> "#{thread_id}") |> Enum.count)
   end
 
   def handle_event("submit", %{"post" => %{"name" => name} = post_params}, socket) do
@@ -69,8 +75,13 @@ defmodule BulletinBoardWeb.PostLive.Index do
                end)}
   end
 
+  def handle_info(%{event: "presence_diff"}, socket) do
+    {:noreply, assign(socket, :active_user_count, Presence.list(@presence_topic <> "#{socket.assigns.thread.id}") |> Enum.count)}
+  end
+
   def subscribe(thread_id) do
     Phoenix.PubSub.subscribe(BulletinBoard.PubSub, @topic <> "#{thread_id}")
+    BulletinBoardWeb.Endpoint.subscribe(@presence_topic <> "#{thread_id}")
   end
 
   defp filter_active_users({user_id, time_ex}, acc) do
